@@ -23,7 +23,7 @@
                     Poin: <span id="userPoints" class="font-bold text-yellow-300">0</span> 🎁
                 </div>
                 <button onclick="toggleAdmin()" class="text-xs bg-indigo-900/40 hover:bg-indigo-900/60 px-3 py-1.5 rounded-full transition">
-                    🔐 Admin
+                    🔐 Admin Dashboard
                 </button>
             </div>
         </div>
@@ -31,14 +31,30 @@
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Active Batch Banner for Customers -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-5 shadow-lg mb-6 flex justify-between items-center">
+            <div>
+                <p class="text-xs uppercase tracking-wider text-purple-200 font-semibold">Status Group Order</p>
+                <h2 id="activeBatchDisplay" class="text-lg font-bold">Memuat Batch...</h2>
+            </div>
+            <span class="text-3xl">📦</span>
+        </div>
+
         <!-- Form Section -->
         <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 mb-6">
             <div class="border-b border-slate-100 pb-4 mb-6">
                 <h2 class="text-xl font-bold text-indigo-900">Form Pemesanan & Kalkulator Jastip</h2>
-                <p class="text-sm text-slate-500">Hitung otomatis total harga pesananmu dari berbagai negara dengan mudah!</p>
+                <p class="text-sm text-slate-500">Pilih batch aktif, hitung otomatis total harga pesananmu!</p>
             </div>
             
             <form id="orderForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Pilih Batch GO yang Dibuka</label>
+                    <select id="orderBatch" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <option value="">Pilih Batch yang Tersedia</option>
+                    </select>
+                </div>
+
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Pemesan / LINE ID / No. WhatsApp</label>
                     <input type="text" id="customerName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: Dobby / @dobbyya">
@@ -57,7 +73,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Barang / Pre-Order</label>
-                        <input type="text" id="itemName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: Album / Snack Thailand">
+                        <input type="text" id="itemName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: Album / Snack">
                     </div>
                 </div>
 
@@ -96,31 +112,53 @@
         </div>
 
         <!-- Admin Panel (Hidden by Default) -->
-        <div id="adminPanel" class="hidden bg-slate-900 text-white rounded-2xl shadow-2xl p-6 md:p-8 mt-8 border border-slate-800">
-            <div class="flex justify-between items-center mb-6">
+        <div id="adminPanel" class="hidden bg-slate-900 text-white rounded-2xl shadow-2xl p-6 md:p-8 mt-8 border border-slate-800 space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-xl font-bold text-yellow-400">🛠️ Dashboard Admin shiningdobbyy GO</h2>
-                    <p class="text-xs text-slate-400">Rekap pesanan yang masuk dari customer di perangkat ini.</p>
+                    <p class="text-xs text-slate-400">Kelola Batch GO dan rekap pesanan customer.</p>
                 </div>
                 <button onclick="toggleAdmin()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700">Tutup</button>
             </div>
             
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead>
-                        <tr class="border-b border-slate-800 text-slate-400">
-                            <th class="pb-3">Pemesan</th>
-                            <th class="pb-3">Negara</th>
-                            <th class="pb-3">Barang</th>
-                            <th class="pb-3 text-right">Total (Rp)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orderTableBody">
-                        <tr>
-                            <td colspan="4" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Tambah Batch Form -->
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <h3 class="text-sm font-bold text-indigo-300 mb-3">➕ Tambah Batch GO Baru</h3>
+                <form id="batchForm" class="flex gap-3">
+                    <input type="text" id="newBatchName" required placeholder="Contoh: Batch 1 - Album SVT (Closing 30 Nov)" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-sm font-semibold transition">Tambah Batch</button>
+                </form>
+            </div>
+
+            <!-- Daftar Batch Aktif -->
+            <div>
+                <h3 class="text-sm font-bold text-slate-300 mb-2">📋 Daftar Batch Tersedia:</h3>
+                <div id="batchList" class="space-y-2 text-sm">
+                    <!-- List batch akan muncul di sini -->
+                </div>
+            </div>
+
+            <!-- Rekap Pesanan -->
+            <div>
+                <h3 class="text-sm font-bold text-slate-300 mb-2">📦 Rekap Semua Pesanan Masuk:</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400">
+                                <th class="pb-3">Batch</th>
+                                <th class="pb-3">Pemesan</th>
+                                <th class="pb-3">Negara</th>
+                                <th class="pb-3">Barang</th>
+                                <th class="pb-3 text-right">Total (Rp)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                            <tr>
+                                <td colspan="5" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -135,14 +173,13 @@
             let total = (price * rate) + 15000;
 
             const redeem = document.getElementById('redeemPoints').value;
-            if (redeem === "100") {
-                total -= 10000;
-            }
+            if (redeem === "100") total -= 10000;
 
             if (total < 0) total = 0;
             document.getElementById('estimatedTotal').value = "Rp " + total.toLocaleString('id-ID');
         }
 
+        // Poin Logic
         let currentPoints = parseInt(localStorage.getItem('shiningPoints')) || 0;
         document.getElementById('userPoints').innerText = currentPoints;
 
@@ -150,24 +187,76 @@
             currentPoints += 100;
             localStorage.setItem('shiningPoints', currentPoints);
             document.getElementById('userPoints').innerText = currentPoints;
-            alert('Yeay! Berhasil klaim 100 poin dari review pesananmu! Total poin sekarang: ' + currentPoints);
+            alert('Yeay! Berhasil klaim 100 poin! Total poin sekarang: ' + currentPoints);
         }
 
+        // Batch & Orders Logic
+        let batches = JSON.parse(localStorage.getItem('shiningBatches')) || ["Batch 1 - General GO"];
         let orders = JSON.parse(localStorage.getItem('shiningOrders')) || [];
+
+        function updateBatchDropdowns() {
+            const select = document.getElementById('orderBatch');
+            const display = document.getElementById('activeBatchDisplay');
+            const batchListDiv = document.getElementById('batchList');
+
+            select.innerHTML = '<option value="">Pilih Batch yang Tersedia</option>';
+            batchListDiv.innerHTML = '';
+
+            if (batches.length === 0) {
+                display.innerText = "Belum ada Batch GO yang dibuka";
+            } else {
+                display.innerText = batches[batches.length - 1]; // Menampilkan batch terakhir/terbaru
+            }
+
+            batches.forEach((b, index) => {
+                select.innerHTML += `<option value="${b}">${b}</option>`;
+                batchListDiv.innerHTML += `
+                    <div class="flex justify-between items-center bg-slate-800 px-3 py-2 rounded-lg border border-slate-700">
+                        <span>${b}</span>
+                        <button onclick="deleteBatch(${index})" class="text-xs bg-red-500/20 text-red-300 hover:bg-red-500/40 px-2.5 py-1 rounded transition">Hapus</button>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('batchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const bName = document.getElementById('newBatchName').value;
+            batches.push(bName);
+            localStorage.setItem('shiningBatches', JSON.stringify(batches));
+            alert('Batch baru berhasil ditambahkan!');
+            this.reset();
+            updateBatchDropdowns();
+        });
+
+        function deleteBatch(index) {
+            if (confirm('Yakin ingin menghapus batch ini?')) {
+                batches.splice(index, 1);
+                localStorage.setItem('shiningBatches', JSON.stringify(batches));
+                updateBatchDropdowns();
+            }
+        }
 
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            const batch = document.getElementById('orderBatch').value;
             const name = document.getElementById('customerName').value;
             const country = document.getElementById('country').value.toUpperCase();
             const item = document.getElementById('itemName').value;
             const total = document.getElementById('estimatedTotal').value;
 
-            orders.push({ name, country, item, total });
+            if (!batch) {
+                alert('Silakan pilih Batch GO terlebih dahulu!');
+                return;
+            }
+
+            orders.push({ batch, name, country, item, total });
             localStorage.setItem('shiningOrders', JSON.stringify(orders));
 
-            alert('Pesanan berhasil dibuat dan tercatat di sistem admin! Silakan hubungi admin untuk konfirmasi pembayaran.');
+            alert('Pesanan berhasil dibuat & masuk ke sistem admin!');
             this.reset();
             calculateTotal();
+            updateBatchDropdowns();
             loadAdminOrders();
         });
 
@@ -175,6 +264,7 @@
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('hidden');
             if (!panel.classList.contains('hidden')) {
+                updateBatchDropdowns();
                 loadAdminOrders();
             }
         }
@@ -184,7 +274,7 @@
             orders = JSON.parse(localStorage.getItem('shiningOrders')) || [];
             
             if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td></tr>`;
                 return;
             }
 
@@ -192,6 +282,7 @@
             orders.forEach(ord => {
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td class="py-3 text-indigo-300 text-xs">${ord.batch}</td>
                         <td class="py-3 font-medium">${ord.name}</td>
                         <td class="py-3"><span class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded text-xs">${ord.country}</span></td>
                         <td class="py-3 text-slate-300">${ord.item}</td>
@@ -200,6 +291,9 @@
                 `;
             });
         }
+
+        // Initialize on load
+        updateBatchDropdowns();
     </script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shiningdobbyy GO - Group Order & Jastip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">✨ shiningdobbyy GO</h1>
+            <div class="text-sm bg-indigo-700 px-3 py-1 rounded-full">
+                Poin Anda: <span id="userPoints" class="font-bold">0</span> Poin 🎁
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4 text-indigo-600">Form Pemesanan & Kalkulator Jastip</h2>
+            
+            <form id="orderForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nama Pemesan / LINE ID</label>
+                    <input type="text" id="customerName" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: Dobby / @dobbyya">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Pilih Negara Asal</label>
+                        <select id="country" class="w-full border rounded-lg px-3 py-2" onchange="calculateTotal()">
+                            <option value="th">Thailand (TH) - Rate: Rp500</option>
+                            <option value="kr">Korea (KR) - Rate: Rp12</option>
+                            <option value="cn">China (CN) - Rate: Rp2.300</option>
+                            <option value="jp">Japan (JP) - Rate: Rp110</option>
+                            <option value="my">Malaysia (MY) - Rate: Rp3.500</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nama Barang / Pre-Order</label>
+                        <input type="text" id="itemName" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: Album / Snack Thailand">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Harga Asli (Mata Úang Asing)</label>
+                        <input type="number" id="originalPrice" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: 350" oninput="calculateTotal()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Estimasi Total (Rupiah)</label>
+                        <input type="text" id="estimatedTotal" readonly class="w-full bg-slate-100 border rounded-lg px-3 py-2 font-bold text-indigo-600" value="Rp 0">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Tukar Poin Jadi Diskon (-Rp10.000 / 100 Poin)</label>
+                    <select id="redeemPoints" class="w-full border rounded-lg px-3 py-2" onchange="calculateTotal()">
+                        <option value="0">Jangan pakai poin</option>
+                        <option value="100">Tukar 100 Poin (Diskon Rp10.000)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700 transition">
+                    Kirim Pesanan
+                </button>
+            </form>
+        </div>
+
+        <!-- Review & Claim Points Section -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-lg font-semibold mb-2 text-indigo-600">Klaim 100 Poin (Selesai Pesanan & Review)</h2>
+            <p class="text-sm text-slate-500 mb-4">Sudah terima barang dan isi review? Masukkan kode pesanan untuk klaim 100 poinmu!</p>
+            <button onclick="claimPoints()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 font-medium text-sm">
+                Klaim 100 Poin Sekarang 🎉
+            </button>
+        </div>
+    </main>
+
+    <script>
+        const rates = { th: 500, kr: 12, cn: 2300, jp: 110, my: 350 };
+
+        function calculateTotal() {
+            const country = document.getElementById('country').value;
+            const price = parseFloat(document.getElementById('originalPrice').value) || 0;
+            const rate = rates[country] || 0;
+            let total = (price * rate) + 15000;
+
+            const redeem = document.getElementById('redeemPoints').value;
+            if (redeem === "100") {
+                total -= 10000;
+            }
+
+            if (total < 0) total = 0;
+            document.getElementById('estimatedTotal').value = "Rp " + total.toLocaleString('id-ID');
+        }
+
+        let currentPoints = parseInt(localStorage.getItem('shiningPoints')) || 0;
+        document.getElementById('userPoints').innerText = currentPoints;
+
+        function claimPoints() {
+            currentPoints += 100;
+            localStorage.setItem('shiningPoints', currentPoints);
+            document.getElementById('userPoints').innerText = currentPoints;
+            alert('Yeay! Berhasil klaim 100 poin dari review pesananmu! Total poin sekarang: ' + currentPoints);
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Pesanan berhasil dibuat! Silakan hubungi admin untuk konfirmasi pembayaran.');
+            this.reset();
+            calculateTotal();
+        });
+    </script>
+</body>
+</html>

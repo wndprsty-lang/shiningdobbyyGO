@@ -5,78 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>shiningdobbyy GO - Group Order & Jastip</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans">
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen text-slate-800">
     <!-- Header -->
-    <header class="bg-indigo-600 text-white shadow-md">
+    <header class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold">✨ shiningdobbyy GO</h1>
-            <div class="text-sm bg-indigo-700 px-3 py-1 rounded-full">
-                Poin Anda: <span id="userPoints" class="font-bold">0</span> Poin 🎁
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">✨</span>
+                <h1 class="text-xl font-bold tracking-wide">shiningdobbyy GO</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="text-xs bg-white/25 backdrop-blur-md px-3 py-1.5 rounded-full font-medium">
+                    Poin: <span id="userPoints" class="font-bold text-yellow-300">0</span> 🎁
+                </div>
+                <button onclick="toggleAdmin()" class="text-xs bg-indigo-900/40 hover:bg-indigo-900/60 px-3 py-1.5 rounded-full transition">
+                    🔐 Admin
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 py-8">
-        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h2 class="text-lg font-semibold mb-4 text-indigo-600">Form Pemesanan & Kalkulator Jastip</h2>
+        <!-- Form Section -->
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 mb-6">
+            <div class="border-b border-slate-100 pb-4 mb-6">
+                <h2 class="text-xl font-bold text-indigo-900">Form Pemesanan & Kalkulator Jastip</h2>
+                <p class="text-sm text-slate-500">Hitung otomatis total harga pesananmu dari berbagai negara dengan mudah!</p>
+            </div>
             
-            <form id="orderForm" class="space-y-4">
+            <form id="orderForm" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Nama Pemesan / LINE ID</label>
-                    <input type="text" id="customerName" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: Dobby / @dobbyya">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Pemesan / LINE ID / No. WhatsApp</label>
+                    <input type="text" id="customerName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: Dobby / @dobbyya">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium mb-1">Pilih Negara Asal</label>
-                        <select id="country" class="w-full border rounded-lg px-3 py-2" onchange="calculateTotal()">
-                            <option value="th">Thailand (TH) - Rate: Rp500</option>
-                            <option value="kr">Korea (KR) - Rate: Rp12</option>
-                            <option value="cn">China (CN) - Rate: Rp2.300</option>
-                            <option value="jp">Japan (JP) - Rate: Rp110</option>
-                            <option value="my">Malaysia (MY) - Rate: Rp3.500</option>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Pilih Negara Asal</label>
+                        <select id="country" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" onchange="calculateTotal()">
+                            <option value="th">🇹🇭 Thailand (TH) - Rate: Rp500</option>
+                            <option value="kr">🇰🇷 Korea (KR) - Rate: Rp12</option>
+                            <option value="cn">🇨🇳 China (CN) - Rate: Rp2.300</option>
+                            <option value="jp">🇯🇵 Japan (JP) - Rate: Rp110</option>
+                            <option value="my">🇲🇾 Malaysia (MY) - Rate: Rp3.500</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Nama Barang / Pre-Order</label>
-                        <input type="text" id="itemName" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: Album / Snack Thailand">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nama Barang / Pre-Order</label>
+                        <input type="text" id="itemName" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: Album / Snack Thailand">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium mb-1">Harga Asli (Mata Úang Asing)</label>
-                        <input type="number" id="originalPrice" required class="w-full border rounded-lg px-3 py-2" placeholder="Contoh: 350" oninput="calculateTotal()">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Harga Asli (Mata Uang Asing)</label>
+                        <input type="number" id="originalPrice" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: 350" oninput="calculateTotal()">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Estimasi Total (Rupiah)</label>
-                        <input type="text" id="estimatedTotal" readonly class="w-full bg-slate-100 border rounded-lg px-3 py-2 font-bold text-indigo-600" value="Rp 0">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Estimasi Total (Rupiah)</label>
+                        <input type="text" id="estimatedTotal" readonly class="w-full bg-indigo-50/70 border border-indigo-200 rounded-xl px-4 py-3 font-bold text-indigo-700 text-lg" value="Rp 0">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-1">Tukar Poin Jadi Diskon (-Rp10.000 / 100 Poin)</label>
-                    <select id="redeemPoints" class="w-full border rounded-lg px-3 py-2" onchange="calculateTotal()">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tukar Poin Jadi Diskon (-Rp10.000 / 100 Poin)</label>
+                    <select id="redeemPoints" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" onchange="calculateTotal()">
                         <option value="0">Jangan pakai poin</option>
                         <option value="100">Tukar 100 Poin (Diskon Rp10.000)</option>
                     </select>
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700 transition">
-                    Kirim Pesanan
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:opacity-95 transition transform active:scale-[0.99]">
+                    Kirim Pesanan Sekarang 🚀
                 </button>
             </form>
         </div>
 
         <!-- Review & Claim Points Section -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <h2 class="text-lg font-semibold mb-2 text-indigo-600">Klaim 100 Poin (Selesai Pesanan & Review)</h2>
-            <p class="text-sm text-slate-500 mb-4">Sudah terima barang dan isi review? Masukkan kode pesanan untuk klaim 100 poinmu!</p>
-            <button onclick="claimPoints()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 font-medium text-sm">
+        <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 mb-6">
+            <h2 class="text-lg font-bold text-indigo-900 mb-2">Klaim 100 Poin (Selesai Pesanan & Review)</h2>
+            <p class="text-sm text-slate-500 mb-4">Sudah terima barang dan isi review? Klik tombol di bawah untuk klaim poinmu!</p>
+            <button onclick="claimPoints()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-md shadow-emerald-100 transition">
                 Klaim 100 Poin Sekarang 🎉
             </button>
+        </div>
+
+        <!-- Admin Panel (Hidden by Default) -->
+        <div id="adminPanel" class="hidden bg-slate-900 text-white rounded-2xl shadow-2xl p-6 md:p-8 mt-8 border border-slate-800">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-yellow-400">🛠️ Dashboard Admin shiningdobbyy GO</h2>
+                    <p class="text-xs text-slate-400">Rekap pesanan yang masuk dari customer di perangkat ini.</p>
+                </div>
+                <button onclick="toggleAdmin()" class="text-xs bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700">Tutup</button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-400">
+                            <th class="pb-3">Pemesan</th>
+                            <th class="pb-3">Negara</th>
+                            <th class="pb-3">Barang</th>
+                            <th class="pb-3 text-right">Total (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <tr>
+                            <td colspan="4" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
@@ -108,12 +153,53 @@
             alert('Yeay! Berhasil klaim 100 poin dari review pesananmu! Total poin sekarang: ' + currentPoints);
         }
 
+        let orders = JSON.parse(localStorage.getItem('shiningOrders')) || [];
+
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Pesanan berhasil dibuat! Silakan hubungi admin untuk konfirmasi pembayaran.');
+            const name = document.getElementById('customerName').value;
+            const country = document.getElementById('country').value.toUpperCase();
+            const item = document.getElementById('itemName').value;
+            const total = document.getElementById('estimatedTotal').value;
+
+            orders.push({ name, country, item, total });
+            localStorage.setItem('shiningOrders', JSON.stringify(orders));
+
+            alert('Pesanan berhasil dibuat dan tercatat di sistem admin! Silakan hubungi admin untuk konfirmasi pembayaran.');
             this.reset();
             calculateTotal();
+            loadAdminOrders();
         });
+
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                loadAdminOrders();
+            }
+        }
+
+        function loadAdminOrders() {
+            const tbody = document.getElementById('orderTableBody');
+            orders = JSON.parse(localStorage.getItem('shiningOrders')) || [];
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-500">Belum ada pesanan masuk.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            orders.forEach(ord => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                        <td class="py-3 font-medium">${ord.name}</td>
+                        <td class="py-3"><span class="bg-indigo-900/60 text-indigo-300 px-2 py-0.5 rounded text-xs">${ord.country}</span></td>
+                        <td class="py-3 text-slate-300">${ord.item}</td>
+                        <td class="py-3 text-right font-semibold text-emerald-400">${ord.total}</td>
+                    </tr>
+                `;
+            });
+        }
     </script>
 </body>
 </html>

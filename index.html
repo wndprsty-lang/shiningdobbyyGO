@@ -22,7 +22,7 @@
                 <div class="text-xs bg-white/25 backdrop-blur-md px-3 py-1.5 rounded-full font-medium">
                     Poin: <span id="userPoints" class="font-bold text-yellow-300">0</span> 🎁
                 </div>
-                <button onclick="toggleAdmin()" class="text-xs bg-indigo-900/40 hover:bg-indigo-900/60 px-3 py-1.5 rounded-full transition">
+                <button onclick="checkAdminPassword()" class="text-xs bg-indigo-900/40 hover:bg-indigo-900/60 px-3 py-1.5 rounded-full transition">
                     🔐 Admin Dashboard
                 </button>
             </div>
@@ -205,7 +205,7 @@
             if (batches.length === 0) {
                 display.innerText = "Belum ada Batch GO yang dibuka";
             } else {
-                display.innerText = batches[batches.length - 1]; // Menampilkan batch terakhir/terbaru
+                display.innerText = batches[batches.length - 1];
             }
 
             batches.forEach((b, index) => {
@@ -259,6 +259,16 @@
             updateBatchDropdowns();
             loadAdminOrders();
         });
+
+        // Password Protected Admin
+        function checkAdminPassword() {
+            const pass = prompt("Masukkan Password Admin:");
+            if (pass === "123") {
+                toggleAdmin();
+            } else if (pass !== null) {
+                alert("Password salah! Akses ditolak.");
+            }
+        }
 
         function toggleAdmin() {
             const panel = document.getElementById('adminPanel');
